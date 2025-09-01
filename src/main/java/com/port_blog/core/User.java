@@ -1,13 +1,15 @@
 package com.port_blog.core;
 
+import com.port_blog.core.errors.userErrors.*;
+
 public class User {
   private String firstName;
   private String middleName;
   private String firstLastName;
   private String secondLastName;
   private String username;
-  private String email;
-  private String rol;
+  private String email; // TODO: implement email class...
+  private UserRol rol;
 
   public User(
     String firstName,
@@ -16,9 +18,27 @@ public class User {
     String secondLastName,
     String username,
     String email,
-    String rol
-  ) {
-    this.fieldValidation();
+    UserRol rol
+  ) throws UserError {
+    if (firstName == null || firstName.isEmpty()) {
+      throw new FirstNameIsRequired(null);
+    }
+
+    if (firstLastName == null || firstLastName.isEmpty()) {
+      throw new FirstLastNameIsRequired(null);
+    }
+
+    if (username == null || username.isEmpty()) {
+      throw new UsernameIsRequired(null);
+    }
+
+    if (email == null || email.isEmpty()) {
+      throw new EmailIsRequired(null);
+    }
+
+    if (rol == null) {
+      throw new RolIsRequired(null);
+    }
 
     this.firstName = firstName;
     this.middleName = middleName;
@@ -53,42 +73,18 @@ public class User {
     return email;
   }
 
-  public String getRol() {
+  public UserRol getRol() {
     return rol;
   }
 
-  // deasrrollar al 100...
   public String getName() {
     StringBuilder name = new StringBuilder();
 
-    name.append(firstName);
+    name.append(firstName + " ");
     name.append(middleName != null ? this.initials(middleName) + ". " : "");
-    name.append(firstLastName != null ? firstLastName : "");
+    name.append(firstLastName + ".");
 
     return name.toString().trim();
-  }
-
-  private void fieldValidation() {
-    if (firstName == null || firstName.isEmpty()) {
-      // crear un error custom para esto...
-      throw new Error("Hola");
-    }
-
-    if (firstLastName == null || firstLastName.isEmpty()) {
-      // creare error custom...
-    }
-
-    if (username == null || username.isEmpty()) {
-      // crear error custom...
-    }
-
-    if (email == null || email.isEmpty()) {
-      // crear error custom...
-    }
-
-    if (rol == null || rol.isEmpty()) {
-      // crear error custom..
-    }
   }
 
   private String initials(String fieldName) {
